@@ -1,3 +1,7 @@
+#깃허브
+#https://webnautes.tistory.com/1422
+#https://copymaster.tistory.com/entry/Web-VS-Code-Git-%EA%B8%B0%EB%8A%A5-%EC%B6%94%EA%B0%80-%EB%B0%8F-History-%EA%B4%80%EB%A6%AC
+
 from matplotlib.pyplot import text
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
