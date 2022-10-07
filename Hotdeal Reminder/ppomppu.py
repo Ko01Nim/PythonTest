@@ -17,36 +17,59 @@ options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
 driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 
-driver.get(url=fmkoreaURL)
+#driver.implicitly_wait(time_to_wait=10)
 
-driver.implicitly_wait(time_to_wait=10)
-
+ppomppu_send_messages = []
 fmkorea_send_messages = []
 
-try :
-    while True : 
-            ppomppu_titles = driver.find_elements(By.CSS_SELECTOR, '#revolution_main_table > tbody > tr > td:nth-child(3) > table > tbody > tr > td:nth-child(2) > div > a > font')
-            ppomppu_urls = driver.find_elements(By.CSS_SELECTOR, '#revolution_main_table > tbody > tr > td:nth-child(3) > table > tbody > tr > td:nth-child(2) > div > a')
-            
-            fmkorea_titles = driver.find_elements(By.CSS_SELECTOR, '#bd_1196365581_0 > div > div.fm_best_widget._bd_pc > ul > li:nth-child(1) > div > h3 > a')
-            fmkorea_urls = driver.find_elements(By.CSS_SELECTOR, '#bd_1196365581_0 > div > div.fm_best_widget._bd_pc > ul > li:nth-child(1) > div > a:nth-child(2)')
-        
-            fmkorea_message = ""
-            
-            #message = titles[0].text + "\n" + urls[0].get_attribute('href')
-            fmkorea_message = fmkorea_titles[0].text + "\n" + fmkorea_urls[0].get_attribute('href')
-            
-            if fmkorea_message not in fmkorea_send_messages :
-                print(fmkorea_message)
-                print('===============================================')
-                fmkorea_send_messages.append(fmkorea_message)
-                token = '5757209381:AAFzs97HU7iZjvR_7V5dCaFA9zZHrz0NMPU'
-                id = '5758273485'
-                    
-                bot = telegram.Bot(token)
-                bot.sendMessage(chat_id=id, text=fmkorea_message)
-                    
-            time.sleep(60.0 * 1)
+loop_cnt = 1
 
+try :
+    token = '5757209381:AAFzs97HU7iZjvR_7V5dCaFA9zZHrz0NMPU'
+    id = '5758273485'
+    bot = telegram.Bot(token)
+            
+    while True : 
+        #PPOMPPU
+        driver.get(url=ppomppuURL)
+        ppomppu_titles = driver.find_elements(By.CSS_SELECTOR, '#revolution_main_table > tbody > tr > td:nth-child(3) > table > tbody > tr > td:nth-child(2) > div > a > font')
+        ppomppu_urls = driver.find_elements(By.CSS_SELECTOR, '#revolution_main_table > tbody > tr > td:nth-child(3) > table > tbody > tr > td:nth-child(2) > div > a')
+        
+        ppomppu_message = ""
+        
+        ppomppu_message = ppomppu_titles[0].text + "\n" + ppomppu_urls[0].get_attribute('href')
+        
+        if ppomppu_message not in ppomppu_send_messages :
+            print('============= PPOMPPU 전송 START =============')
+            ppomppu_send_messages.append(ppomppu_message)
+            bot.sendMessage(chat_id=id, text=ppomppu_message)
+            print(ppomppu_message)
+            print('============= PPOMPPU 전송 END =============')
+        else :
+            print('============= PPOMPPU 전송 내역 없음 =============')
+            
+        #FMKOREA
+        driver.get(url=fmkoreaURL)
+        fmkorea_titles = driver.find_elements(By.CSS_SELECTOR, '#bd_1196365581_0 > div > div.fm_best_widget._bd_pc > ul > li:nth-child(1) > div > h3 > a')
+        fmkorea_urls = driver.find_elements(By.CSS_SELECTOR, '#bd_1196365581_0 > div > div.fm_best_widget._bd_pc > ul > li:nth-child(1) > div > a:nth-child(2)')
+        
+        fmkorea_message = ""
+        
+        fmkorea_message = fmkorea_titles[0].text + "\n" + fmkorea_urls[0].get_attribute('href')
+        
+        if fmkorea_message not in fmkorea_send_messages :
+            print('============= FMKOREA 전송 START =============')
+            fmkorea_send_messages.append(fmkorea_message)
+            bot.sendMessage(chat_id=id, text=fmkorea_message)
+            print(fmkorea_message)
+            print('============= FMKOREA 전송 END =============')
+        else :
+            print('============= FMKOREA 전송 내역 없음 =============')
+            
+        print("루프 카운트 : " + str(loop_cnt))     
+        loop_cnt = loop_cnt + 1
+         
+        time.sleep(60.0 * 1)
+        
 except KeyboardInterrupt:
     print('Pause')    
